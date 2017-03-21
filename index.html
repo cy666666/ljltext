@@ -1,8 +1,38 @@
+<!DOCTYPE html>
+
 <html>
 	<head>
+		<meta charset="UTF-8">
 		<title>luojialun</title>
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		<p>test132</p>
+		<script src="jquery.js"></script>
+			
+		<div class="header">
+			<h1>羅家倫先生文存</h1>
+		</div>
+		<div class="content">易君左函釋「今曰之世界新潮文義——民國八年三月十五日——
+  君左先生：來書與拙作「今日之世界新潮」一文相辯難，佩甚！感甚！今以時間匆促，謹簡單致
+答如下：一、思想革命是各種革命的總因。因爲人民的思想變了，所以會起革命。革命雖有緩急大小之不
+同，而其本於思想則一。若是先生單獨擧出思想革命來，自無不可。若是擧出來與政治社會諸革命相
+對待，似可不必。二、思潮是始終防不住的，因是正當的思潮，就是眞理。眞理是防不住的，所以思潮是防不住的
+。先生一面說思潮比水還要流通，一面又說同水一樣可以築堤防得住。這樣自相矛盾的比喩，未免有
+點在邏輯上說不過去。況且法蘭西革命的潮流，德意志何嘗沒有受影響。德國當時民主社會黨何等衆
+  復易君左函  一
+  	</div>
+
+
+  	<script>
+  		
+  		var selector="div.content";
+  		var content=$(selector).html();
+
+  		$.getJSON("http://localhost:8000?callback=?", {article: content}, function(result) {
+  				$(selector).html(result);
+  				console.log(result);
+  		});
+  	</script>
 	</body>
 </html>
+
