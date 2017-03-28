@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 
 <html>
 	<head>
@@ -46,3 +46,44 @@
 	</body>
 </html>
 
+-->
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>luojialun</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <script src="jquery.js"></script>
+    <script type="text/javascript" src="utils.js" id="link_data_proxy_utils"></script>
+
+    <div class="header">
+      <h1>羅家倫先生文存</h1>
+    </div>
+
+    <div class="content">
+      國 初 誠意 伯 劉 公 伯 温 嘗 著 郁 離子 五 巻 覆 瓿 集 并 拾遺 二十 巻 犂 眉 公 集 五 巻 寫 情 集 暨 春秋 明 經 各 四 巻 其 孫 
+    </div>
+
+
+
+    <script>
+      
+      var selector="div.content";
+      var content=$(selector).html();
+      var _modules = [];
+        $("input[name='check_module']:checked").each(function (i, ele) {
+            _modules.push(ele.value);
+        });
+      LINK_DATA_PROXY.check(content, _modules, function (_result) {
+            $("#check_result").html(_result.join(" "));
+
+
+            console.log(_result);
+            $(selector).html(_result);
+        });
+    </script>
+  </body>
+</html>
