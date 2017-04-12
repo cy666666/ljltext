@@ -1,4 +1,4 @@
-<!--<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html>
 	<head>
@@ -8,28 +8,19 @@
 	</head>
 	<body>
 		<script src="jquery.js"></script>
+    <script type="text/javascript" src="utils.js" id="link_data_proxy_utils"></script>
 
 		<div class="header">
-			<h1>羅家倫先生文存</h1>
+			<h1>誠意伯文集序</h1>
 		</div>
-		<div class="content">羅家倫先生文存
-  肆、函  札
-  復易君左函釋「今曰之世界新潮」文義
-  ——民國八年三月十五日——
-  君左先生：來書與拙作「今日之世界新潮」一文相辯難，佩甚！感甚！今以時間匆促，謹簡單致
-答如下：
-  一、思想革命是各種革命的總因。因爲人民的思想變了，所以會起革命。革命雖有緩急大小之不
-同，而其本於思想則一。若是先生單獨擧出思想革命來，自無不可。若是擧出來與政治社會諸革命相
-對待，似可不必。
-  二、思潮是始終防不住的，因是正當的思潮，就是眞理。眞理是防不住的，所以思潮是防不住的
-
-。先生一面說思潮比水還要流通，一面又說同水一樣可以築堤防得住。這樣自相矛盾的比喩，未免有
-點在邏輯上說不過去。況且法蘭西革命的潮流，德意志何嘗沒有受影響。德國當時民主社會黨何等衆
-  復易君左函  一  
+		<div class="content">國初誠意伯劉公伯温嘗著郁離子五巻覆瓿集并拾遺二十巻犂眉公集五巻寫情集暨春秋明經各四巻其孫廌集御書及狀序諸作曰翊運録皆鋟梓行世然諸集渙而無統板畫久而寖湮學者病之巡浙御史戴君用與其寀薛君謙楊君琅謀重鋟廼録善本次第諸集而冠以翊運録俾杭郡守張君僖成之屬守陳序維公以命世豪傑之才出佐我高皇剪羣雄混六合讜言谹議牖道天𠂻偉略竒謀指授羣帥者鼎彞勒之汗青書之四方尚能道之方其未遇也鬱積感憤發之文辭若四嶽之出雲無窮若公輸之營衆宇各盡其制若孫武子之師戈甲蔽野而不聞喑嗚叱咤之聲若大海浩溔中畜虬螭䱎䲛●●之屬覩者眙●而莫能名然皆載道之航輪濟世之粱帛時已傳誦之及逹而施之朝廟播之華夷埀之百世之下焯乎不可朽也三代之英卓矣漢以降佐命元勲多崛起草莽甲兵間諳文墨者殊鮮子房
   	</div>
-
-
-  	<script>
+ 
+<div id="query_reqsult1"></div>
+<div id="query_reqsult2"></div>
+<div id="query_reqsult3"></div>
+<div id="query_reqsult4"></div>  	 
+<script>
   		
   		var selector="div.content";
   		var content=$(selector).html();
@@ -42,48 +33,80 @@
 
 
   		});
+
+/*
+$.getJSON("http://exp-linked-data-proxy-2017.dlll.nccu.edu.tw/wiki,moedict,cbdb,tgaz,cdict,pixabay/羅家倫?callback=?", function (_data) {
+      var testttt1=$(_data[0]["response"]).text();
+      var testttt2=$(_data[1]["response"]).text();
+      console.log(testttt1);
+      var content= _data;
+      $("#query_reqsult1").html(_data[0]["response"]);
+      $("#query_reqsult2").html(_data[1]["response"]);
+      $("#query_reqsult3").html(_data[2]["response"]);
+      $("#query_reqsult4").html(_data[3]["response"]);
+  });
+  */
   	</script>
-	</body>
-</html>
-
--->
-<!DOCTYPE html>
-
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>luojialun</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <script src="jquery.js"></script>
-    <script type="text/javascript" src="utils.js" id="link_data_proxy_utils"></script>
-
-    <div class="header">
-      <h1>羅家倫先生文存</h1>
-    </div>
-
-    <div class="content">
-      國 初 誠意 伯 劉 公 伯 温 嘗 著 郁 離子 五 巻 覆 瓿 集 并 拾遺 二十 巻 犂 眉 公 集 五 巻 寫 情 集 暨 春秋 明 經 各 四 巻 其 孫 
-    </div>
-
-
 
     <script>
-      
-      var selector="div.content";
-      var content=$(selector).html();
-      var _modules = [];
+
+
+      $("#check").submit(function () {
+        $("#check_result").html("Loading...");
+        
+        var _query = $("#check_query").val().trim();
+        var _modules = [];
         $("input[name='check_module']:checked").each(function (i, ele) {
             _modules.push(ele.value);
         });
-      LINK_DATA_PROXY.check(content, _modules, function (_result) {
+        
+        LINK_DATA_PROXY.check(_query, _modules, function (_result) {
             $("#check_result").html(_result.join(" "));
-
-
-            console.log(_result);
-            $(selector).html(_result);
         });
+        return false;
+    });
+
+
+    $(document).ready(function () {
+    $(document).on('click', '.vocabulary.tooltip', function () {
+        //alert($(this).text());
+        var ts=$(this).text();
+        var pop;
+        var _result = $("#result").empty();
+        _result.html("Loading...");
+      $.getJSON("http://exp-linked-data-proxy-2017.dlll.nccu.edu.tw/wiki,moedict,cbdb,tgaz,cdict,pixabay/"+ts+"?callback=?", function (_data) {
+          $("#result").empty();
+            for (var _i = 0; _i < _data.length; _i++) {
+                var _d = _data[_i];
+                var _module = _d.module;
+                if (typeof(_d.response) === "string") {
+                    var _response = _d.response;
+                    _result.append($("<fieldset><legend>" + _module + "</legend>" + _response + "</fieldset>"));
+                }
+            }
+
+        /*
+        var testttt1;
+        var datalength=_data.length-1;
+        for(i=0;i<=datalength;i++){
+            if(_data[i]!=null || _data[i]!=""){
+              testttt1+=$(_data[i]["response"]).text();
+              
+            }
+        }
+        alert(testttt1);*/
+        
+        //pop=ts+'<span class="popuptext">'+$(_data[0]["response"]).text()+"</span>" ;
+        
+      });
+    });
+});
     </script>
-  </body>
+  
+ <span class="vocabulary tooltip">
+    誠意伯<span class="popuptext">劉基（1311年7月1日－1375年5月16日），字伯溫，浙江青田人，祖籍陝西保安（志丹），南宋抗金將領劉光世的後人。元末明初軍事家、政治家及詩人，通經史、曉天文、精兵法。他以輔佐明太祖朱元璋完成帝業、開創明朝並保持國家安定，因而馳名天下，被後人比作爲諸葛武侯。朱元璋多次稱劉基為：「吾之子房也。」授資善大夫、上護軍，封誠意伯。正德時追贈太師，諡文成。</span>
+  </span>
+  <div id="result"></div>
+	</body>
 </html>
+

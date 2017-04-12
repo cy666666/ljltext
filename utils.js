@@ -21,7 +21,7 @@ LINK_DATA_PROXY.check = function (_query, _modules, _callback) {
         return;
     }
     
-    var _url = LINK_DATA_PROXY.get_host() + "check/" + _modules.join(",") + "?callback=?";
+    var _url = "http://exp-linked-data-proxy-2017.dlll.nccu.edu.tw/" + "check/" + _modules.join(",") + "?callback=?";
     var _data = {
         "query": _query
     };
@@ -51,11 +51,11 @@ LINK_DATA_PROXY.check = function (_query, _modules, _callback) {
 };
 
 LINK_DATA_PROXY.vote = function (_query, _module, _score, _callback) {
-    var _url = LINK_DATA_PROXY.get_host() + _module + "/" + encodeURI(_query) + "/" + _score + "?callback=?";
+    var _url = "http://exp-linked-data-proxy-2017.dlll.nccu.edu.tw/" + _module + "/" + encodeURI(_query) + "/" + _score + "?callback=?";
     $.getJSON(_url, _callback);
 };
 
 LINK_DATA_PROXY.query = function (_query, _modules, _callback) {
-    var _url = LINK_DATA_PROXY.get_host() + _modules.join(",") + "/" + encodeURI(_query) + "?callback=?";
+    var _url = "http://exp-linked-data-proxy-2017.dlll.nccu.edu.tw/" + _modules.join(",") + "/" + encodeURI(_query) + "?callback=?";
     $.getJSON(_url, _callback);
 };
