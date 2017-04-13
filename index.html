@@ -21,31 +21,88 @@
 <div id="query_reqsult3"></div>
 <div id="query_reqsult4"></div>  	 
 <script>
-  		
-  		var selector="div.content";
-  		var content=$(selector).html();
-
-  		$.getJSON("http://localhost:8000?callback=?", {article: content}, function(result) {
-
-  				console.log(result);
-  				
-  				$(selector).html(result);
 
 
-  		});
+var iframe_post = function (_url, _data, _callback) {
+    
+    var _DEBUG = true;
+    
+    if (typeof(_data) === "function" && typeof(_callback) === "undefined") {
+        _callback = _data;
+        _data = {};
+    }
+    else if (typeof(_data) === "undefined") {
+        _data = {};
+    }
+    
+    var _id = "iframe_post" + (new Date()).getTime();
+    var _body = $("body");
+    var _form = $('<form action="' + _url + '" method="post" target="' + _id +  '"></form>')
+            .hide().appendTo(_body);
+    var _iframe = $('<iframe name="' + _id + '"></iframe>')
+            .hide()
+            .appendTo(_body);
+    if (_DEBUG === true) {
+        _iframe.show();
+    }
+    
+    for (var _key in _data) {
+        var _value = _data[_key];
+        
+        $('<input type="hidden" name="' + _key + '" value="' + _value + '" />')
+                .appendTo(_form);
+    }
+    
+    _iframe.bind("load", function () {
+        setTimeout(function () {
+            if (_DEBUG !== true) {
+                _iframe.remove();
+            }
+            
+            if (typeof(_callback) === "function") {
+                _callback();
+            }
+        }, 100);
+    });
+    
+    setTimeout(function () {
+        _form.submit();
+    }, 100);
+    
+};
+
+var selector="div.content";
+var content=$(selector).html();
 
 /*
-$.getJSON("http://exp-linked-data-proxy-2017.dlll.nccu.edu.tw/wiki,moedict,cbdb,tgaz,cdict,pixabay/羅家倫?callback=?", function (_data) {
-      var testttt1=$(_data[0]["response"]).text();
-      var testttt2=$(_data[1]["response"]).text();
-      console.log(testttt1);
-      var content= _data;
-      $("#query_reqsult1").html(_data[0]["response"]);
-      $("#query_reqsult2").html(_data[1]["response"]);
-      $("#query_reqsult3").html(_data[2]["response"]);
-      $("#query_reqsult4").html(_data[3]["response"]);
-  });
-  */
+$.getJSON("http://localhost:8000?callback=?", {article: content}, function(result) {
+		console.log(result);
+		$(selector).html(result);
+});
+*/
+iframe_post("http://localhost:8000/p", {article: content}, function(result) {
+
+    var _retry = function () {
+      $.getJSON("http://localhost:8000/p?callback=?", function (result) {
+          if (result === undefined) {
+            setTimeout(function () {
+              console.log("再次查詢");
+              _retry();
+            }, 3000);
+          }
+          else {
+            console.log(result);
+            $(selector).html(result);
+          }
+      });
+    };
+    _retry();
+
+});
+
+
+
+
   	</script>
 
     <script>
