@@ -13,19 +13,32 @@
 		<div class="header">
 			<h1>誠意伯文集序</h1>
 		</div>
-		<div class="content">國初誠意伯劉公伯温嘗著郁離子五巻覆瓿集并拾遺二十巻犂眉公集五巻寫情集暨春秋明經各四巻其孫廌集御書及狀序諸作曰翊運録皆鋟梓行世然諸集渙而無統板畫久而寖湮學者病之巡浙御史戴君用與其寀薛君謙楊君琅謀重鋟廼録善本次第諸集而冠以翊運録俾杭郡守張君僖成之屬守陳序維公以命世豪傑之才出佐我高皇剪羣雄混六合讜言谹議牖道天𠂻偉略竒謀指授羣帥者鼎彞勒之汗青書之四方尚能道之方其未遇也鬱積感憤發之文辭若四嶽之出雲無窮若公輸之營衆宇各盡其制若孫武子之師戈甲蔽野而不聞喑嗚叱咤之聲若大海浩溔中畜虬螭䱎䲛●●之屬覩者眙●而莫能名然皆載道之航輪濟世之粱帛時已傳誦之及逹而施之朝廟播之華夷埀之百世之下焯乎不可朽也三代之英卓矣漢以降佐命元勲多崛起草莽甲兵間諳文墨者殊鮮子房
+		<div class="content">國初誠意伯劉公伯温嘗著郁離子五巻覆瓿集并拾遺二十巻犂眉公集五巻寫情集暨春秋明經各四巻其孫廌集御書及狀序諸作曰翊運録皆鋟梓行世然諸集渙而無統板畫久而寖湮學者病之巡浙御史戴君用與其寀薛君謙楊君琅謀重鋟廼録善本次第諸集而冠以翊運録俾杭郡守張君僖成之屬守陳序維公以命世豪傑之才出佐我高皇剪羣雄混六合讜言谹議牖道天𠂻偉略竒謀指授羣帥者鼎彞勒之汗青書之四方尚能道之方其未遇也鬱積感憤發之文辭若四嶽之出雲無窮若公輸之營衆宇各盡其制若孫武子之師戈甲蔽野而不聞喑嗚叱咤之聲若大海浩溔中畜虬螭䱎䲛之屬覩者眙而莫能名然皆載道之航輪濟
   	</div>
- 
-<div id="query_reqsult1"></div>
-<div id="query_reqsult2"></div>
-<div id="query_reqsult3"></div>
-<div id="query_reqsult4"></div>  	 
+    
+    
+        <input type='button' id="term" value='泡沫'>
+<script>
+    
+    $("#term").click(function () {
+        var term_value = this.value;
+        $.getJSON("http://localhost:8000/add_term?callback=?", {term: term_value, cache_id: cache_id}, function(result) {
+
+        });
+        $.getJSON("http://exp-linked-data-proxy-2017.dlll.nccu.edu.tw/add_term?callback=?", {term: term_value, cache_id: cache_id}, function(result) {
+
+        });
+    });
+
+
+</script>
+
 <script>
 
 
 var iframe_post = function (_url, _data, _callback) {
     
-    var _DEBUG = true;
+    var _DEBUG = false;
     
     if (typeof(_data) === "function" && typeof(_callback) === "undefined") {
         _callback = _data;
@@ -80,15 +93,27 @@ $.getJSON("http://localhost:8000?callback=?", {article: content}, function(resul
 		$(selector).html(result);
 });
 */
-iframe_post("http://localhost:8000/p", {article: content}, function(result) {
+cache_id = undefined;
+iframe_post("http://localhost:8000/parse_article", {article: content}, function(result) {
 
     var _retry = function () {
-      $.getJSON("http://localhost:8000/p?callback=?", function (result) {
-          if (result === undefined) {
+      $.getJSON("http://localhost:8000/parse_article?callback=?", function (data) {
+          if (data === null) {
             setTimeout(function () {
               console.log("再次查詢");
               _retry();
             }, 3000);
+            return;
+          }
+
+          var result = data.result;
+          cache_id = data.cache_id;
+          if (result === undefined || result === null) {
+            setTimeout(function () {
+              console.log("再次查詢");
+              _retry();
+            }, 3000);
+            return;
           }
           else {
             console.log(result);
@@ -96,8 +121,10 @@ iframe_post("http://localhost:8000/p", {article: content}, function(result) {
           }
       });
     };
-    _retry();
 
+    setTimeout(function () {
+        _retry();
+    }, 100);
 });
 
 
@@ -126,7 +153,6 @@ iframe_post("http://localhost:8000/p", {article: content}, function(result) {
 
     $(document).ready(function () {
     $(document).on('click', '.vocabulary.tooltip', function () {
-        //alert($(this).text());
         var ts=$(this).text();
         var pop;
         var _result = $("#result").empty();
@@ -141,19 +167,6 @@ iframe_post("http://localhost:8000/p", {article: content}, function(result) {
                     _result.append($("<fieldset><legend>" + _module + "</legend>" + _response + "</fieldset>"));
                 }
             }
-
-        /*
-        var testttt1;
-        var datalength=_data.length-1;
-        for(i=0;i<=datalength;i++){
-            if(_data[i]!=null || _data[i]!=""){
-              testttt1+=$(_data[i]["response"]).text();
-              
-            }
-        }
-        alert(testttt1);*/
-        
-        //pop=ts+'<span class="popuptext">'+$(_data[0]["response"]).text()+"</span>" ;
         
       });
     });
