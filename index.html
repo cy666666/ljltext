@@ -4,31 +4,44 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>luojialun</title>
-		<link rel="stylesheet" href="style.css">
-	</head>
-	<body>
-		<script src="jquery.js"></script>
-    <script type="text/javascript" src="utils.js" id="link_data_proxy_utils"></script>
 
+		<link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" type="text/css" href="dist/css/tooltipster.bundle.min.css"/>
+    <link rel="stylesheet" type="text/css" href="dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css"/>
+    <link rel="stylesheet" type="text/css" href="dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-noir.min.css"/>
+
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="utils.js" id="link_data_proxy_utils"></script>
+    <script type="text/javascript" src="dist/js/tooltipster.bundle.min.js"></script>
+    <script type="text/javascript" src="rangy-core.js"></script>
+
+    <script type="text/javascript" src="linked-data-proxy-lib.js"></script>
+
+
+	</head>
+
+	<body>
 		<div class="header">
 			<h1>誠意伯文集序</h1>
 		</div>
-		<div class="content">國初誠意伯劉公伯温嘗著郁離子五巻覆瓿集并拾遺二十巻犂眉公集五巻寫情集暨春秋明經各四巻其孫廌集御書及狀序諸作曰翊運録皆鋟梓行世然諸集渙而無統板畫久而寖湮學者病之巡浙御史戴君用與其寀薛君謙楊君琅謀重鋟廼録善本次第諸集而冠以翊運録俾杭郡守張君僖成之屬守陳序維公以命世豪傑之才出佐我高皇剪羣雄混六合讜言谹議牖道天𠂻偉略竒謀指授羣帥者鼎彞勒之汗青書之四方尚能道之方其未遇也鬱積感憤發之文辭若四嶽之出雲無窮若公輸之營衆宇各盡其制若孫武子之師戈甲蔽野而不聞喑嗚叱咤之聲若大海浩溔中畜虬螭䱎䲛之屬覩者眙而莫能名然皆載道之航輪濟
+		<div class="content">國初誠意伯劉公伯温嘗著郁離子五巻覆瓿集并拾遺二十巻犂眉公集五巻寫情集暨春秋明經各四巻其孫廌集御書及狀序諸作曰翊運録皆鋟梓行世然諸集渙而無統板畫久而寖湮學者病之巡浙御史戴君用與其寀薛君謙楊君琅謀重鋟廼録善本次第諸集而冠以翊運録俾杭郡守張君僖成之屬守陳序維公以命世豪傑之才出佐我高皇剪羣雄混六合讜言谹議牖道天𠂻偉略竒謀指授羣帥者鼎彞勒之汗青書之四方尚能道之方其未遇也鬱積感憤發之文辭若四嶽之出雲無窮若公輸之營衆宇各盡其制若孫武子之師戈甲蔽野而不聞喑嗚叱咤之聲若大海浩溔中畜虬螭䱎䲛●●之屬覩者眙●而莫能名然皆載道之航輪濟世之粱帛時已傳誦之及逹而施之朝廟播之華夷埀之百世之下焯乎不可朽也三代之英卓矣漢以降佐命元勲多崛起草莽甲兵間諳文墨者殊鮮子房之䇿不見辭章元齡之文僅辦符檄未見樹開國之勲業而兼傳世之文章如公者公可謂千古之人豪矣而世或疑其仕元或獨稱其觀象者是猶訾伊尹之五就知周公止於才藝而已不亦陋乎三御史之重鋟兹集蓋高山景行之志也守陳之序居培塿而論嵩岱持土苴而寘之夜光朝采之上可乎哉成化六年夏六月四明楊守陳序
   	</div>
     
     
-        <input type='button' id="term" value='泡沫'>
+        <input type='button' id="term" value='楊守陳序'>
 <script>
-    
+    //var URL="http://pc.pulipuli.info:3000";
+    var URL="http://exp-linked-data-proxy-2017.dlll.nccu.edu.tw";
     $("#term").click(function () {
         var term_value = this.value;
         $.getJSON("http://localhost:8000/add_term?callback=?", {term: term_value, cache_id: cache_id}, function(result) {
 
         });
-        $.getJSON("http://exp-linked-data-proxy-2017.dlll.nccu.edu.tw/add_term?callback=?", {term: term_value, cache_id: cache_id}, function(result) {
+        $.getJSON(URL+"/add_term?callback=?", {term: term_value, cache_id: cache_id}, function(result) {
 
         });
     });
+
 
 
 </script>
@@ -84,17 +97,23 @@ var iframe_post = function (_url, _data, _callback) {
     
 };
 
-var selector="div.content";
-var content=$(selector).html();
 
-/*
-$.getJSON("http://localhost:8000?callback=?", {article: content}, function(result) {
-		console.log(result);
-		$(selector).html(result);
-});
-*/
+var selector="div.content";
 cache_id = undefined;
-iframe_post("http://localhost:8000/parse_article", {article: content}, function(result) {
+var SELECT_TEXT;
+
+$(function() {
+  // 網頁讀取完成之後才會做
+  var content=$(selector).html();
+  iframe_post("http://localhost:8000/parse_article", {article: content}, _iframe_post_callback);
+});
+
+
+
+
+
+
+var _iframe_post_callback = function(result) {
 
     var _retry = function () {
       $.getJSON("http://localhost:8000/parse_article?callback=?", function (data) {
@@ -102,7 +121,7 @@ iframe_post("http://localhost:8000/parse_article", {article: content}, function(
             setTimeout(function () {
               console.log("再次查詢");
               _retry();
-            }, 3000);
+            }, 10000);
             return;
           }
 
@@ -112,12 +131,15 @@ iframe_post("http://localhost:8000/parse_article", {article: content}, function(
             setTimeout(function () {
               console.log("再次查詢");
               _retry();
-            }, 3000);
+            }, 10000);
             return;
           }
           else {
             console.log(result);
             $(selector).html(result);
+
+            _setup_tooltip();
+
           }
       });
     };
@@ -125,9 +147,110 @@ iframe_post("http://localhost:8000/parse_article", {article: content}, function(
     setTimeout(function () {
         _retry();
     }, 100);
-});
+};
 
+var _setup_tooltip = function () {
 
+  var _TOOLTIP_LOCK = false;
+  var _TOOLTIP_CONTENT;
+  $('.autoanno_tooltip').tooltipster({
+      //maxWidth: 400,
+      contentAsHTML: true,
+      interactive: true,
+      trigger:'click',
+      theme:'tooltipster-noir',
+      //contentCloning: true,
+      functionBefore: function (instance, helper) {
+        if (_TOOLTIP_LOCK === true) {
+          instance.close(function () {
+            _TOOLTIP_LOCK = false;
+
+            $(helper.origin).click();
+
+          });
+          return false;
+        }
+        else {
+          //setTimeout(function() {
+          _TOOLTIP_CONTENT = '<div style="text-align:center;margin-top: calc(25vh - 15px - 0.5rem)"><img src="loading.gif"/><br />Loading</div>';
+          $("#linked_data_proxy_result").html(_TOOLTIP_CONTENT);
+          $(".tooltipster-content").html(_TOOLTIP_CONTENT);
+
+          setTimeout(function () {
+            var _add_term_mode = false;
+            var _query_text = helper.origin;
+            if (SELECT_TEXT !== undefined) {
+                _query_text = SELECT_TEXT;
+                _add_term_mode = true;
+                SELECT_TEXT = undefined;
+            }
+
+            _query(_query_text, _add_term_mode, function (_result) {
+              _TOOLTIP_CONTENT = _result;
+              //(helper.tooltip).find(".tooltipster-content").html(_TOOLTIP_CONTENT);
+              $("#linked_data_proxy_result").html(_TOOLTIP_CONTENT);
+              $(".tooltipster-content").html(_TOOLTIP_CONTENT);
+            });
+          }, 0);
+            
+            
+          //*},100);
+        }
+          
+      },
+      functionReady: function (instance, helper) {
+        $(".tooltipster-content").html(_TOOLTIP_CONTENT);
+        //$(helper.tooltip).find(".tooltipster-content").html(_TOOLTIP_CONTENT);
+        //*},100);
+        _TOOLTIP_LOCK = true;
+        //instance.disable();
+      }
+      /*
+      functionBefore: function (instance, helper) {
+        if (instance.status.open === true) {
+          instance.close(function () {
+            //_query(helper.origin);
+            //instance.disable();
+          });
+        }
+        else {
+          
+        }
+        console.log(_TOOLTIP_LOCK);
+        if (_TOOLTIP_LOCK === true) {
+          instance.disable();
+        }
+      },
+      //timer: 50000000,
+      functionReady: function (instance, helper) {
+        //instance.disable();
+        //console.log("close");
+        _TOOLTIP_LOCK = true;
+        _query(helper.origin);
+        instance.disable();
+      },
+      functionAfter: function (instance) {
+        //_TOOLTIP_LOCK = false;
+        //instance.enable();
+      }
+      */
+  });
+
+  rangy.init();
+  console.log("ready");
+  $(selector).mouseup(function () {
+    var sel = rangy.getSelection();
+    var _selection_text = sel.toString().trim();
+    if (_selection_text !== "") {
+      console.log("顯示tooltip,載入:" + _selection_text);
+      SELECT_TEXT = _selection_text;
+      //console.log(sel.getRangeAt(0).getDocument());
+      //$(sel.getRangeAt(0)).click();
+      $(sel.focusNode.parentElement).click();
+    }
+  });
+
+};
 
 
   	</script>
@@ -135,7 +258,7 @@ iframe_post("http://localhost:8000/parse_article", {article: content}, function(
     <script>
 
 
-      $("#check").submit(function () {
+    $("#check").submit(function () {
         $("#check_result").html("Loading...");
         
         var _query = $("#check_query").val().trim();
@@ -151,31 +274,132 @@ iframe_post("http://localhost:8000/parse_article", {article: content}, function(
     });
 
 
-    $(document).ready(function () {
-    $(document).on('click', '.vocabulary.tooltip', function () {
-        var ts=$(this).text();
-        var pop;
-        var _result = $("#result").empty();
-        _result.html("Loading...");
-      $.getJSON("http://exp-linked-data-proxy-2017.dlll.nccu.edu.tw/wiki,moedict,cbdb,tgaz,cdict,pixabay/"+ts+"?callback=?", function (_data) {
-          $("#result").empty();
-            for (var _i = 0; _i < _data.length; _i++) {
-                var _d = _data[_i];
-                var _module = _d.module;
-                if (typeof(_d.response) === "string") {
-                    var _response = _d.response;
-                    _result.append($("<fieldset><legend>" + _module + "</legend>" + _response + "</fieldset>"));
-                }
-            }
-        
-      });
-    });
-});
-    </script>
+$('<div>1111</div>').appendTo($("body"));
+    
+var _query = function (instance, add_term_mode, callback) {
+  var ts;
+  if (typeof(instance) === "object") {
+    ts = $(instance).text();
+  }
+  else {
+    ts = instance;
+  }
   
- <span class="vocabulary tooltip">
-    誠意伯<span class="popuptext">劉基（1311年7月1日－1375年5月16日），字伯溫，浙江青田人，祖籍陝西保安（志丹），南宋抗金將領劉光世的後人。元末明初軍事家、政治家及詩人，通經史、曉天文、精兵法。他以輔佐明太祖朱元璋完成帝業、開創明朝並保持國家安定，因而馳名天下，被後人比作爲諸葛武侯。朱元璋多次稱劉基為：「吾之子房也。」授資善大夫、上護軍，封誠意伯。正德時追贈太師，諡文成。</span>
+  
+  var _url = URL+"/wiki,moedict,cbdb,tgaz,cdict,pixabay/"+ts+"?callback=?"; 
+  //var _url = "http://pc.pulipuli.info:3000/wiki,moedict,cbdb,tgaz,cdict,pixabay/"+ts+"?callback=?";
+  $.getJSON(_url, function (_data) {
+    //$("#result").empty();
+    var _result = $("<div></div>");
+    var _que=$("<div></div>").addClass("que").appendTo(_result);
+    var _menu = $("<div></div>").addClass("menu").appendTo(_result);
+    var _module_name = {
+      "zh.wikipedia.org": "維基百科",
+      "www.moedict.tw": "萌典",
+      "cdict.net": "字典",
+      "maps.cga.harvard.edu": "TGAZ",
+      "cbdb.fas.harvard.edu": "CBDB"
+    };
+    var _module_symbol ={
+      "zh.wikipedia.org": "wiki",
+      "www.moedict.tw": "moedict",
+      "cdict.net": "cdict",
+      "maps.cga.harvard.edu": "tgaz",
+      "cbdb.fas.harvard.edu": "cbdb"
+    };
+
+    var _que_text='<h2 class="tooltip_title">查詢字詞: '+ ts +'</h2>';
+    _que.append(_que_text);
+
+    if(add_term_mode===true){
+      var _addterm_button= $('<input type="button" id="term" data-term="'+ts+'" value="添加新詞">');
+      _addterm_button.css({
+        "float": "right"
+      });
+      _addterm_button.click(function () {
+        var term_value = $(this).data("term");
+        $.getJSON("http://localhost:8000/add_term?callback=?", {term: term_value, cache_id: cache_id}, function(result) {
+
+        });
+        $.getJSON(URL+"/add_term?callback=?", {term: term_value, cache_id: cache_id}, function(result) {
+
+        });
+      });
+
+      _addterm_button.prependTo(_que);
+    }
+
+    for (var _i = 0; _i < _data.length; _i++) {
+      var _d = _data[_i];
+      var _module = _d.module;
+      if (typeof(_d.response) === "string") {
+          var _response = _d.response;
+          var _name = _module;
+          if (typeof(_module_name[_module]) === "string") {
+            _name = _module_name[_module];
+            _symbol = _module_symbol[_module];
+          }
+          var _menu_button = $('<button type="button" data-module="' + _module + '">' + _name +  '</button>');    
+          _menu_button.click(function(event) {
+            _result.find("fieldset").hide();
+            var _data_module = $(this).data("module");
+            
+            _result.find('fieldset[data-module="' + _data_module + '"]').show();
+          });
+
+          _menu.append(_menu_button);
+          if(add_term_mode===true){
+            var _fieldset = $("<fieldset data-module='" + _module + "'><legend>" + _name + "</legend>" + _response + "</fieldset>");
+            
+          }
+          else{
+            var _fieldset = $("<fieldset data-module='" + _module + "'><legend>" + _name + "</legend>" + _response + "</fieldset>");
+            var _legend = _fieldset.find("legend");
+            var _plus_button = $('<button type="button" id="plus"> 有幫助 </button>')
+                .appendTo(_legend);
+            _plus_button.click(function () {
+              //------------------------
+              var _module = $(this).parents("fieldset:first").data("module");
+              if (typeof(_module_symbol[_module]) === "string") {
+                _module = _module_symbol[_module];
+              }
+              //ts = encodeURIComponent(ts);
+              $.getJSON(URL+"/"+_module+"/"+ts+"/1?callback=?" ,function(result) {
+
+              });
+              //------------------------
+            });
+            var _minus_button = $('<button type="button" id="minus"> 沒有幫助 </button>').appendTo(_legend);
+            _minus_button.click(function () {
+              var  _module= $(this).parents("fieldset:first").data("module");
+              if (typeof(_module_symbol[_module]) === "string") {
+                _module = _module_symbol[_module];
+              }
+              $.getJSON(URL+"/"+_module+"/"+ts+"/-1?callback=?" ,function(result) {
+
+              });
+            });
+            
+          }
+          _fieldset.hide();
+          //_fieldset.append(_addterm_button);
+          _result.append(_fieldset);
+      }
+    }  //end of for loop
+    _result.find("fieldset:first").show();
+    callback(_result);
+  });
+};
+
+</script>
+  
+<span class="tooltip" data-tooltip-content="#autoanno_tooltip_content">誠意伯</span>
+<div class="autoanno_tooltip_templates">
+  <span id="autoanno_tooltip_content">
+    <div id="linked_data_proxy_result" style="width: 50vw;height: 50vh;max-height: 50vh; overflow-y: auto;"></div>
   </span>
+</div>
+
   <div id="result"></div>
 	</body>
 </html>
